@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_asbeza/views/components/myAppBar.dart';
 import 'package:my_asbeza/views/components/myDrawer.dart';
-
 import '../bloc/asbeza_bloc.dart';
-import '../routes.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,11 +25,16 @@ class _HomePageState extends State<HomePage> {
         builder: (context, state) {
           if (state is AsbezaInitial) {
             return Center(
-              child: ElevatedButton(
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(200, 50),
+                    alignment: Alignment.center,
+                    elevation: 0),
                 onPressed: () {
                   BlocProvider.of<AsbezaBloc>(context).add(const AsbezaEvent());
                 },
-                child: const Text("GET YOU ASBEZA"),
+                icon: const Icon(Icons.shopping_basket_rounded),
+                label: const Text("GET YOU ASBEZA"),
               ),
             );
           }
@@ -40,61 +43,58 @@ class _HomePageState extends State<HomePage> {
               child: CircularProgressIndicator(),
             );
           } else if (state is AsbezaSuccess) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  height: MediaQuery.of(context).size.height * .1,
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 4,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        color: Colors.amberAccent,
-                        height: MediaQuery.of(context).size.height * .05,
-                        width: MediaQuery.of(context).size.width * .35,
-                        padding: const EdgeInsets.all(10.0),
-                        margin: const EdgeInsets.only(right: 15.0),
-                        child: Text(state.asbeza[0].foodTitle),
-                      );
-                    },
-                  ),
-                ),
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                  child: const Text(
-                    "ASBEZA ITEMS",
-                    style: TextStyle(fontWeight: FontWeight.w900),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 5),
-                  height: MediaQuery.of(context).size.height * .72,
-                  child: ListView.builder(
-                    itemCount: state.asbeza.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final asbezaVal = state.asbeza[index];
-                      return Container(
-                        height: MediaQuery.of(context).size.height * .15,
-                        color: Colors.blueAccent,
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 11, vertical: 5),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(asbezaVal.foodTitle),
-                            Text(asbezaVal.foodPrice.toString()),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                )
-              ],
+            return Container(
+              margin: const EdgeInsets.only(top: 5),
+              height: MediaQuery.of(context).size.height * .88,
+              child: ListView.builder(
+                itemCount: state.asbeza.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final asbezaVal = state.asbeza[index];
+                  return Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        fit: BoxFit.contain,
+                                        image: NetworkImage(asbezaVal.image))),
+                                height: MediaQuery.of(context).size.height * .1,
+                                width: MediaQuery.of(context).size.width * .3,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 11, vertical: 5),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * .4,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(asbezaVal.foodTitle),
+                                    Text(
+                                      "${asbezaVal.foodPrice}\$",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w900),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.shopping_cart))
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      )
+                    ],
+                  );
+                },
+              ),
             );
           }
           return Container();

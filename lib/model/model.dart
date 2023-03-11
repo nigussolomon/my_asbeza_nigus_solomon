@@ -1,20 +1,21 @@
 class Asbeza {
   String foodTitle;
   String foodDescription;
+  String image;
   num foodPrice;
 
-  Asbeza({
-    required this.foodTitle,
-    required this.foodDescription,
-    required this.foodPrice,
-  });
+  Asbeza(
+      {required this.foodTitle,
+      required this.foodDescription,
+      required this.foodPrice,
+      required this.image});
 
   factory Asbeza.fromJson(Map<String, dynamic> parsedJson) {
     return Asbeza(
-      foodTitle: parsedJson["title"],
-      foodDescription: parsedJson["description"],
-      foodPrice: parsedJson["price"],
-    );
+        foodTitle: parsedJson["title"],
+        foodDescription: parsedJson["description"],
+        foodPrice: parsedJson["price"],
+        image: parsedJson["image"]);
   }
 
   static List asbezaList(List asbeza) {
