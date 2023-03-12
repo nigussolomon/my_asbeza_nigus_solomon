@@ -11,7 +11,10 @@ class MyAppBar extends StatelessWidget {
       backgroundColor: Colors.white,
       elevation: 0,
       foregroundColor: Colors.black,
-      title: const Text("MyAsbeza"),
+      title: Transform.translate(
+        offset: const Offset(-25.0, 0.0),
+        child: const Text("ASBEZA"),
+      ),
       actions: [
         IconButton(
             onPressed: () {
