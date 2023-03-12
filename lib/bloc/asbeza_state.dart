@@ -13,5 +13,6 @@ class AsbezaLoading extends AsbezaState {}
 
 class AsbezaSuccess extends AsbezaState {
   final List asbeza;
-  const AsbezaSuccess({required this.asbeza});
+  final List history;
+  const AsbezaSuccess({required this.asbeza, required this.history});
 }
