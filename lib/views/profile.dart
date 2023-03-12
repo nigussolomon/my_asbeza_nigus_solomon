@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_asbeza/views/components/myDrawer.dart';
-
+import 'package:mobile_number/mobile_number.dart';
+import 'package:flutter/services.dart';
 import 'components/myAppBar.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -11,6 +12,45 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  String _mobileNumber = '';
+  List<SimCard> _simCard = <SimCard>[];
+
+  @override
+  void initState() {
+    super.initState();
+    MobileNumber.listenPhonePermission((isPermissionGranted) {
+      if (isPermissionGranted) {
+        initMobileNumberState();
+      } else {}
+    });
+
+    initMobileNumberState();
+  }
+
+  Future<void> initMobileNumberState() async {
+    if (!await MobileNumber.hasPhonePermission) {
+      await MobileNumber.requestPhonePermission;
+      return;
+    }
+    try {
+      _mobileNumber = (await MobileNumber.mobileNumber)!;
+      _simCard = (await MobileNumber.getSimCards)!;
+    } on PlatformException catch (e) {
+      debugPrint("Failed to get mobile number because of '${e.message}'");
+    }
+    if (!mounted) return;
+
+    setState(() {});
+  }
+
+  Widget fillCards() {
+    List<Widget> widgets = _simCard
+        .map((SimCard sim) => Text(
+            'Sim Card Number: (${sim.countryPhonePrefix}) - ${sim.number}\nCarrier Name: ${sim.carrierName}\nCountry Iso: ${sim.countryIso}\nDisplay Name: ${sim.displayName}\nSim Slot Index: ${sim.slotIndex}\n\n'))
+        .toList();
+    return Column(children: widgets);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           children: [
             Container(
-              height: MediaQuery.of(context).size.height * .15,
+              height: MediaQuery.of(context).size.height * .2,
               width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.only(bottom: 15),
               decoration: const BoxDecoration(
@@ -57,22 +97,29 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             "NIGUS SOLOMON",
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
                                 color: Colors.white),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
-                          Text(
+                          const Text(
                             "@nigus116",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white),
                           ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            "+$_mobileNumber",
+                            style: const TextStyle(color: Colors.white),
+                          )
                         ],
                       )
                     ],
