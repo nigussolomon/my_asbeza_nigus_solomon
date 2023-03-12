@@ -27,11 +27,13 @@ class _HomePageState extends State<HomePage> {
             return Center(
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
                     minimumSize: const Size(200, 50),
                     alignment: Alignment.center,
                     elevation: 0),
                 onPressed: () {
-                  BlocProvider.of<AsbezaBloc>(context).add(const AsbezaEvent());
+                  BlocProvider.of<AsbezaBloc>(context)
+                      .add(const AsbezaFetchEvent());
                 },
                 icon: const Icon(Icons.shopping_basket_rounded),
                 label: const Text("GET YOU ASBEZA"),
@@ -84,7 +86,10 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                BlocProvider.of<AsbezaBloc>(context)
+                                    .add(HistoryEvent(asbeza: asbezaVal));
+                              },
                               icon: const Icon(Icons.shopping_cart))
                         ],
                       ),
